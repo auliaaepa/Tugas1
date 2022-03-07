@@ -38,9 +38,11 @@ try:
             # handle receiving message and sending file
             else:
                 try:
+                    # receive message from client
                     message = sock.recv(BUF_SIZE).decode("utf-8")
                     
                     if message:
+                        # get command
                         splited_message = message.split()
                         command = splited_message[0]
 
@@ -51,17 +53,21 @@ try:
                                 print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
                                 continue
                             
+                            # get filename and filepath
                             filename = splited_message[1]
                             filepath = "dataset/" + filename
 
+                            # if requested file exist in dataset
                             if os.path.exists(filepath):
                                 success_msg = "Start sending file..."
                                 sock.send(success_msg.encode("utf-8"))
                                 print("Send to client :", sock.getpeername(), success_msg.encode("utf-8"))
                                 
+                                # send file name and file size
                                 sock.send(filename.encode("utf-8"))
                                 sock.send(str(os.path.getsize(filepath)).encode("utf-8"))
                                 
+                                # send file content
                                 with open(filepath, 'rb') as file:
                                     content = file.read()
                                     sock.sendall(content)
@@ -75,9 +81,11 @@ try:
                             error_msg = "Unknown command\n"
                             sock.send(error_msg.encode("utf-8"))
                             print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
+                    # client close connection
                     else:
                         sock.close()
                         input_socket.remove(sock)
+                        print("Closed client:", client_address)
                 
                 except IndexError:
                     error_msg = "Unknown command\n"
