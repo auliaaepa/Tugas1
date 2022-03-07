@@ -1,6 +1,5 @@
 import socket
 import sys
-import os
 
 # define buffer size
 BUF_SIZE = 1024
@@ -36,12 +35,13 @@ try:
                 received_size = 0
                 # loop until get full file content
                 while received_size < file_size:
+                    sys.stdout.write(">> {:>5.2f}%\n".format(received_size*100/file_size))
                     received_file = client_socket.recv(BUF_SIZE)
-                    received_size += BUF_SIZE
                     file.write(received_file)
+                    received_size += BUF_SIZE
                 file.close()
             sys.stdout.write(">> " + file_name + " successfully downloaded.\n")
-            sys.stdout.write(">> " + file_name + " received as " + new_file_name + "\n")
+            sys.stdout.write(">> file saved as " + new_file_name + "\n")
         sys.stdout.write(">> ")
 
 except KeyboardInterrupt:
