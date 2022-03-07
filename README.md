@@ -12,6 +12,7 @@ Server:
 - Menerima pesan berupa `unduh nama_file`
 - Membaca file yang diminta oleh klien
 - Menambahkan message header yang diletakkan sebelum isi file dengan struktur sebagai berikut (contoh raw message header):
+	
 	file-name: contoh.html,\n
 	
 	file-size: 2048,\n
