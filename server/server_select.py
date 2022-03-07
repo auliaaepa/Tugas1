@@ -19,7 +19,7 @@ server_address = (HOST, PORT)
 server_socket.bind(server_address)
 
 # accept connections from max 5 clients at the same time
-server_socket.listen(1)
+server_socket.listen(5)
 
 # list to store accepted client
 input_socket = [server_socket]
