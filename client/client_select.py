@@ -26,12 +26,13 @@ try:
         received_msg = client_socket.recv(BUF_SIZE).decode('utf-8')
         sys.stdout.write(received_msg)
         # download file if command correct
-        if received_msg == "Start sending file...":
+        if received_msg == "Start sending file...\n":
             # get file name and file size
             file_name = client_socket.recv(BUF_SIZE).decode('utf-8')
             file_size = int(client_socket.recv(BUF_SIZE).decode('utf-8'))
+            new_file_name = "from_server_" + file_name
             # get file content
-            with open(file_name, "wb") as file:
+            with open(new_file_name, "wb") as file:
                 received_size = 0
                 # loop until get full file content
                 while received_size < file_size:
@@ -39,7 +40,7 @@ try:
                     received_size += BUF_SIZE
                     file.write(received_file)
                 file.close()
-            sys.stdout.write(" " + file_name + " received\n")
+            sys.stdout.write(">> " + file_name + " received as " + new_file_name + "\n")
         sys.stdout.write(">> ")
 
 except KeyboardInterrupt:

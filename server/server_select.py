@@ -40,7 +40,7 @@ try:
                 try:
                     # receive message from client
                     message = sock.recv(BUF_SIZE).decode("utf-8")
-                    
+
                     if message:
                         # get command
                         splited_message = message.split()
@@ -55,11 +55,11 @@ try:
                             
                             # get filename and filepath
                             filename = splited_message[1]
-                            filepath = "dataset/" + filename
+                            filepath = os.path.join(os.getcwd(), "dataset", filename)
 
                             # if requested file exist in dataset
                             if os.path.exists(filepath):
-                                success_msg = "Start sending file..."
+                                success_msg = "Start sending file...\n"
                                 sock.send(success_msg.encode("utf-8"))
                                 print("Send to client :", sock.getpeername(), success_msg.encode("utf-8"))
                                 
