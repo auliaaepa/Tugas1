@@ -3,6 +3,9 @@ import select
 import sys
 import os
 
+# define buffer size
+BUF_SIZE = 1024
+
 # initialize socket object with AF_INET as address family and SOCK_STREAM as socket type
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -35,7 +38,7 @@ try:
             # handle receiving message and sending file
             else:
                 try:
-                    message = sock.recv(1024).decode("utf-8")
+                    message = sock.recv(BUF_SIZE).decode("utf-8")
                     
                     if message:
                         splited_message = message.split()

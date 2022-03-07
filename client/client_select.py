@@ -3,7 +3,7 @@ import sys
 import os
 
 # define buffer size
-BUF_SIZE = 4096
+BUF_SIZE = 1024
 
 # initialize socket object with AF_INET as address family and SOCK_STREAM as socket type
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,11 +21,11 @@ try:
         message = sys.stdin.readline()
         client_socket.send(bytes(message, 'utf-8'))
 
-        received_msg = client_socket.recv(1024).decode('utf-8')
+        received_msg = client_socket.recv(BUF_SIZE).decode('utf-8')
         sys.stdout.write(received_msg)
         if received_msg == "Start sending file...":
-            file_name = client_socket.recv(1024).decode('utf-8')
-            file_size = int(client_socket.recv(1024).decode('utf-8'))
+            file_name = client_socket.recv(BUF_SIZE).decode('utf-8')
+            file_size = int(client_socket.recv(BUF_SIZE).decode('utf-8'))
             with open(file_name, "wb") as file:
                 received_size = 0
                 while received_size < file_size:
