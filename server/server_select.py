@@ -83,9 +83,9 @@ try:
                             print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
                     # client close connection
                     else:
+                        print("Closed client:", sock.getpeername())
                         sock.close()
-                        input_socket.remove(sock)
-                        print("Closed client:", client_address)
+                        input_socket.remove(sock)                        
                 
                 except IndexError:
                     error_msg = "Unknown command\n"
