@@ -40,6 +40,7 @@ try:
                     received_size += BUF_SIZE
                     file.write(received_file)
                 file.close()
+            sys.stdout.write(">> " + file_name + " successfully downloaded.\n")
             sys.stdout.write(">> " + file_name + " received as " + new_file_name + "\n")
         sys.stdout.write(">> ")
 
