@@ -43,18 +43,18 @@ try:
 
                     if message:
                         # get command
-                        splited_message = message.split()
-                        command = splited_message[0]
+                        splitted_message = message.split()
+                        command = splitted_message[0]
 
                         if command == "unduh":
-                            if len(splited_message) != 2: 
+                            if len(splitted_message) != 2: 
                                 error_msg = "Unknown argument\n"
                                 sock.send(error_msg.encode("utf-8"))
                                 print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
                                 continue
                             
                             # get filename and filepath
-                            filename = splited_message[1]
+                            filename = splitted_message[1]
                             filepath = os.path.join(os.getcwd(), "dataset", filename)
 
                             # if requested file exist in dataset
