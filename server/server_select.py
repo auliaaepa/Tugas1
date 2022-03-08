@@ -62,21 +62,21 @@ try:
                                 success_msg = "Start sending file...\n"
                                 sock.send(success_msg.encode("utf-8"))
                                 print("Send to client :", sock.getpeername(), success_msg.encode("utf-8"))
-                                
-                                # send file name and file size
-                                sock.send(filename.encode("utf-8"))
-                                sock.send(str(os.path.getsize(filepath)).encode("utf-8"))
+
+                                # create header message
                                 filesize = os.path.getsize(filepath)
-                                
+                                header = filename + ",\n" + str(filesize) + ",\n"
+                                header = header.encode("utf-8")
+
                                 # send file content
                                 with open(filepath, 'rb') as file:
                                     send_size = 0
                                     while send_size < filesize:
-                                        content = file.read(BUF_SIZE)
-                                        sock.send(content)
+                                        content = file.read(BUF_SIZE-len(header))
+                                        send_file = header + content
+                                        sock.send(send_file)
                                         send_size += len(content)
                                         print("Send to client :", sock.getpeername(), filename, "[{:>6.2f}%]".format(send_size*100/filesize))
-                                    file.close()
                             else:
                                 error_msg = "File not found\n"
                                 sock.send(error_msg.encode("utf-8"))
