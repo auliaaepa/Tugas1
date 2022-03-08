@@ -3,8 +3,10 @@ import select
 import sys
 import os
 
-# define buffer size
+# define buffer size, encoding format, and separator for header message
 BUF_SIZE = 1024
+FORMAT = "utf-8"
+SEPARATOR = ",\n"
 
 # initialize socket object with AF_INET as address family and SOCK_STREAM as socket type
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -39,7 +41,7 @@ try:
             else:
                 try:
                     # receive message from client
-                    message = sock.recv(BUF_SIZE).decode("utf-8")
+                    message = sock.recv(BUF_SIZE).decode(FORMAT)
 
                     if message:
                         # get command
@@ -49,8 +51,8 @@ try:
                         if command == "unduh":
                             if len(splitted_message) != 2: 
                                 error_msg = "Unknown argument\n"
-                                sock.send(error_msg.encode("utf-8"))
-                                print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
+                                sock.send(error_msg.encode(FORMAT))
+                                print("Send to client :", sock.getpeername(), error_msg.encode(FORMAT))
                                 continue
                             
                             # get filename and filepath
@@ -60,13 +62,12 @@ try:
                             # if requested file exist in dataset
                             if os.path.exists(filepath):
                                 success_msg = "Start sending file...\n"
-                                sock.send(success_msg.encode("utf-8"))
-                                print("Send to client :", sock.getpeername(), success_msg.encode("utf-8"))
+                                sock.send(success_msg.encode(FORMAT))
+                                print("Send to client :", sock.getpeername(), success_msg.encode(FORMAT))
 
                                 # create header message
                                 filesize = os.path.getsize(filepath)
-                                header = filename + ",\n" + str(filesize) + ",\n"
-                                header = header.encode("utf-8")
+                                header = (filename + SEPARATOR + str(filesize) + SEPARATOR).encode(FORMAT)
 
                                 # send file content
                                 with open(filepath, 'rb') as file:
@@ -79,12 +80,12 @@ try:
                                         print("Send to client :", sock.getpeername(), filename, "[{:>6.2f}%]".format(send_size*100/filesize))
                             else:
                                 error_msg = "File not found\n"
-                                sock.send(error_msg.encode("utf-8"))
-                                print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
+                                sock.send(error_msg.encode(FORMAT))
+                                print("Send to client :", sock.getpeername(), error_msg.encode(FORMAT))
                         else:
                             error_msg = "Unknown command\n"
-                            sock.send(error_msg.encode("utf-8"))
-                            print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
+                            sock.send(error_msg.encode(FORMAT))
+                            print("Send to client :", sock.getpeername(), error_msg.encode(FORMAT))
                     # client close connection
                     else:
                         print("Closed client:", sock.getpeername())
@@ -93,8 +94,8 @@ try:
                 
                 except IndexError:
                     error_msg = "Unknown command\n"
-                    sock.send(error_msg.encode("utf-8"))
-                    print("Send to client :", sock.getpeername(), error_msg.encode("utf-8"))
+                    sock.send(error_msg.encode(FORMAT))
+                    print("Send to client :", sock.getpeername(), error_msg.encode(FORMAT))
 
 except KeyboardInterrupt:        
     server_socket.close()
