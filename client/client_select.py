@@ -34,11 +34,11 @@ try:
             with open(new_file_name, "wb") as file:
                 received_size = 0
                 # loop until get full file content
-                while received_size < file_size:
-                    sys.stdout.write(">> {:>5.2f}%\n".format(received_size*100/file_size))
+                while received_size < file_size:                    
                     received_file = client_socket.recv(BUF_SIZE)
                     file.write(received_file)
-                    received_size += BUF_SIZE
+                    received_size += len(received_file)
+                    sys.stdout.write(">> {:>6.2f}%\n".format(received_size*100/file_size))
                 file.close()
             sys.stdout.write(">> " + file_name + " successfully downloaded.\n")
             sys.stdout.write(">> file saved as " + new_file_name + "\n")

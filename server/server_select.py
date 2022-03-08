@@ -66,12 +66,16 @@ try:
                                 # send file name and file size
                                 sock.send(filename.encode("utf-8"))
                                 sock.send(str(os.path.getsize(filepath)).encode("utf-8"))
+                                filesize = os.path.getsize(filepath)
                                 
                                 # send file content
                                 with open(filepath, 'rb') as file:
-                                    content = file.read()
-                                    sock.sendall(content)
-                                    print(filename, "sent")
+                                    send_size = 0
+                                    while send_size < filesize:
+                                        content = file.read(BUF_SIZE)
+                                        sock.send(content)
+                                        send_size += len(content)
+                                        print("Send to client :", sock.getpeername(), filename, "[{:>6.2f}%]".format(send_size*100/filesize))
                                     file.close()
                             else:
                                 error_msg = "File not found\n"
