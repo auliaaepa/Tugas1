@@ -1,9 +1,10 @@
 import socket
 import sys
-import re
 
-# define buffer size
+# define buffer size, encoding format, and separator for header message
 BUF_SIZE = 1024
+FORMAT = "utf-8"
+SEPARATOR = b",\n"
 
 # initialize socket object with AF_INET as address family and SOCK_STREAM as socket type
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,17 +21,17 @@ try:
     while True:
         # request to server
         message = sys.stdin.readline()
-        client_socket.send(bytes(message, 'utf-8'))
+        client_socket.send(bytes(message, FORMAT))
 
         # receive response from server
-        received_msg = client_socket.recv(BUF_SIZE).decode('utf-8')
+        received_msg = client_socket.recv(BUF_SIZE).decode(FORMAT)
         sys.stdout.write(received_msg)
         # download file if command correct
         if received_msg == "Start sending file...\n":
             # extract header(file name and file size) and content from message
             received_file = client_socket.recv(BUF_SIZE)
-            extract = received_file.split(b",\n", 2)
-            file_name, file_size, content = extract[0].decode('utf-8'), int(extract[1].decode('utf-8')), extract[2]
+            extract = received_file.split(SEPARATOR, 2)
+            file_name, file_size, content = extract[0].decode(FORMAT), int(extract[1].decode(FORMAT)), extract[2]
             new_file_name = "from_server_" + file_name
 
             # get file content
@@ -41,7 +42,7 @@ try:
                 # loop until get full file content
                 while content_size < file_size:                    
                     received_file = client_socket.recv(BUF_SIZE)
-                    extract = received_file.split(b",\n", 2)
+                    extract = received_file.split(SEPARATOR, 2)
                     content = extract[2]
                     file.write(content)
                     content_size += len(content)
