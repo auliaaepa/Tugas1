@@ -89,7 +89,7 @@ try:
                             print("Send to client :", sock.getpeername(), error_msg.encode(FORMAT))
                     # client close connection
                     else:
-                        print("Closed client:", sock.getpeername())
+                        print("Closed client  :", sock.getpeername())
                         sock.close()
                         input_socket.remove(sock)                        
                 
