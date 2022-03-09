@@ -19,6 +19,7 @@ HOST = str(sys.argv[1])
 PORT = int(sys.argv[2])
 server_address = (HOST, PORT)
 server_socket.bind(server_address)
+print("Server bind to :", server_socket.getsockname())
 
 # accept connections from max 5 clients at the same time
 server_socket.listen(5)
