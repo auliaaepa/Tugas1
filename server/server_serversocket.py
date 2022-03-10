@@ -61,13 +61,12 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
                 # client close connection
                 else:
                     print(threading.current_thread().name, "Closed client  :", self.request.getpeername())
-                    self.request.close()
                     break
             
             except IndexError:
                 error_msg = "Unknown command\n"
                 self.request.send(error_msg.encode(FORMAT))
-                print(threading.current_thread().name, "Send to client :", self.request.getpeername(), error_msg.encode(FORMAT))            
+                print(threading.current_thread().name, "Send to client :", self.request.getpeername(), error_msg.encode(FORMAT))
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     """Nothing to add here, inherited everything necessary from parents"""
@@ -84,12 +83,13 @@ if __name__ == "__main__":
 
     try: 
         # start a thread with the socket server - will create one thread for each request
-        server_thread = threading.Thread(target=socket_server.serve_forever)
+        # server_thread = threading.Thread(target=socket_server.serve_forever)
         # server_thread.daemon = False
-        server_thread.start()
-        print(server_thread.name, "Server bind to :", socket_server.server_address)
+        # server_thread.start()
+        # print(server_thread.name, "Server bind to :", socket_server.server_address)
 
-        # socket_server.serve_forever()
+        socket_server.serve_forever()
+        print("Server bind to :", socket_server.server_address)
 
     except KeyboardInterrupt:
         # socket_server.shutdown()
